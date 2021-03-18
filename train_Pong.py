@@ -1,7 +1,7 @@
 import gym
 import sys
-import agent
-import Q_network
+import agent_pong
+import Q_network_pong
 import experience_replay
 import torch
 import numpy as np
@@ -66,21 +66,32 @@ def train(episodes, env, env_name, agent, save):
         agent.save(env_name)
     return agent
 
+# opt = {
+#     "LEARN_FREQ" : 3, # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
+#     "MEMORY_SIZE" : int(1e7),    # replay memory的大小，越大越占用内存
+#     "MEMORY_WARMUP_SIZE" : 1000,  # replay_memory 里需要预存一些经验数据，再开启训练
+#     "BATCH_SIZE" : 32,   # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
+#     "LEARNING_RATE" : 0.0001, # 学习率
+#     "GAMMA" : 0.99, # reward 的衰减因子，一般取 0.9 到 0.999 不等
+#     "E_GREEDY" : 1,
+#     "E_GREEDY_DECREMENT" : 5e-6,
+#     "max_episode" : 1000
+# }
 opt = {
-    "LEARN_FREQ" : 3, # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
-    "MEMORY_SIZE" : int(1e7),    # replay memory的大小，越大越占用内存
-    "MEMORY_WARMUP_SIZE" : 1000,  # replay_memory 里需要预存一些经验数据，再开启训练
-    "BATCH_SIZE" : 32,   # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
-    "LEARNING_RATE" : 0.0001, # 学习率
+    "LEARN_FREQ" : 5, # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
+    "MEMORY_SIZE" : 200000,    # replay memory的大小，越大越占用内存
+    "MEMORY_WARMUP_SIZE" : 500,  # replay_memory 里需要预存一些经验数据，再开启训练
+    "BATCH_SIZE" : 128,   # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
+    "LEARNING_RATE" : 0.001, # 学习率
     "GAMMA" : 0.99, # reward 的衰减因子，一般取 0.9 到 0.999 不等
-    "E_GREEDY" : 1,
-    "E_GREEDY_DECREMENT" : 5e-6,
-    "max_episode" : 1000
+    "E_GREEDY" : 0.1,
+    "E_GREEDY_DECREMENT" : 1e-6, # 1e-6
+    "max_episode" : 2000
 }
 def preprocess(image):
     """ 预处理 210x160x3 uint8 frame into 6400 (80x80) 1维 float vector """
-    # image = image[35:195] # 裁剪
-    # image = image[::2,::2,1] # 下采样，缩放2倍
+    image = image[35:195] # 裁剪
+    image = image[::2,::2,1] # 下采样，缩放2倍
     image[image == 144] = 0 # 擦除背景 (background type 1)
     image[image == 109] = 0 # 擦除背景 (background type 2)
     # image[image != 0] = 1 # 转为灰度图，除了黑色外其他都是白色
@@ -97,7 +108,7 @@ if __name__ == "__main__":
     logging.warning(opt)
     num_act = env.action_space.n
     num_obs = (210, 160, 3)
-    dqn_agent = agent.DQN_agent(num_act, num_obs, opt["GAMMA"], opt["LEARNING_RATE"], opt["E_GREEDY"], opt["E_GREEDY_DECREMENT"])
+    dqn_agent = agent_pong.DQN_agent(num_act, num_obs, opt["GAMMA"], opt["LEARNING_RATE"], opt["E_GREEDY"], opt["E_GREEDY_DECREMENT"])
     # dqn_agent.load("DQN\CartPole-v0.pth")
     # print("evaluate on {} episode: reward {}".format(20, evaluate(20, env, dqn_agent, True)))
     train(opt["max_episode"], env, env_name, dqn_agent, True)

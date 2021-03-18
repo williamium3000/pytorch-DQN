@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append("DQN")
-import Q_network
+import Q_network_pong
 import numpy as np
 import torch
 from torch import nn
@@ -9,8 +9,8 @@ from torch.optim import lr_scheduler
 import copy
 class DQN_agent():
     def __init__(self, num_act, dim_obs, gamma, lr, e_greedy, e_greed_decrement):
-        self.model = Q_network.Q_network(dim_obs, num_act)
-        self.target_model = Q_network.Q_network(dim_obs, num_act)
+        self.model = Q_network_pong.Q_network(dim_obs, num_act)
+        self.target_model = Q_network_pong.Q_network(dim_obs, num_act)
         self.target_model.load_state_dict(copy.deepcopy(self.model.state_dict()))
         self.Loss = nn.MSELoss()
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
