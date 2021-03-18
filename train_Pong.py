@@ -1,9 +1,8 @@
 import gym
 import sys
-sys.path.append(".")
-from DQN import agent
-from DQN import Q_network
-from DQN import experience_replay
+import agent
+import Q_network
+import experience_replay
 import torch
 import numpy as np
 import logging

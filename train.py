@@ -68,18 +68,18 @@ opt = {
     "LEARN_FREQ" : 5, # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
     "MEMORY_SIZE" : 200000,    # replay memory的大小，越大越占用内存
     "MEMORY_WARMUP_SIZE" : 500,  # replay_memory 里需要预存一些经验数据，再开启训练
-    "BATCH_SIZE" : 256,   # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
-    "LEARNING_RATE" : 0.01, # 学习率
-    "GAMMA" : 0.995, # reward 的衰减因子，一般取 0.9 到 0.999 不等
+    "BATCH_SIZE" : 128,   # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
+    "LEARNING_RATE" : 0.001, # 学习率
+    "GAMMA" : 0.99, # reward 的衰减因子，一般取 0.9 到 0.999 不等
     "E_GREEDY" : 0.1,
     "E_GREEDY_DECREMENT" : 1e-6, # 1e-6
-    "max_episode" : 1000
+    "max_episode" : 2000
 }
 
 if __name__ == "__main__":
     writer = SummaryWriter()
-    # env_name = "CartPole-v0"
-    env_name = "MountainCar-v0"
+    env_name = "CartPole-v0"
+    # env_name = "MountainCar-v0"
     
     logging.basicConfig(filename = "{}.log".format(env_name))
     env = gym.make(env_name)

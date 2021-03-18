@@ -20,21 +20,49 @@ Then we do backprop on this loss.
 
 ![](images/DQN.png)
 
+## Implementation
+
+- train.py: training entrance
+- train_Pong.py: training on Pong environment
+- eval.py: evaluating and visualizing the rollout in environment
+- experience_replay.py: experience buffer for DQN
+- agent.py: agent interacting with environment
+- agent_pong.py: agent for Pong environment
+- Q_network.py: Q network for DQN
+- Q_network_pong.py: Q network for Pong environment
+
+To train on CartPole or MountainCar, modify hyperparameters and environments in train.py and run
+
+    python train.py
+
+We use tensorboard to record the reward with respect to episode, you can log on and see
+
+    tensorboard --logdir=runs  
+
+To train pong environment
+
+    python train_Pong.py
+
 ## Experiments and results
 ### Environments
 
 #### CartPole-v0
 CartPole-v0 involves a pole on a car and an agent is required to hold control of the car(left/right) in order to prevent the pole from falling. Each step, the agent is rewarded 1 if the pole fails to fall, with a maximum steps of 200.
-![](images/CartPole-vo.gif)
+![](images/CartPole-v0.gif)
 #### MountainCar-v0
 MountainCar-v0 involves a car in a valley and an agent is required to control the car to drive up the mountain on the right. However, the car's engine is not strong enough to scale the mountain in a single pass. Therefore, the agent is required to learn to drive back and forth to build up momentum.
 ![](images/MountainCar.png)
 
 ### Results
-Both environments uses agents trained for 1000 episodes with a learning rate of 0.001, batch size of 64, learning frequency of 3, gamma of 0.99 and a $\epsilon$-greedy of 0.1(1e-6 decrement every step)
+Both environments uses agents trained for 2000 episodes with a learning rate of 0.001, batch size of 128, learning frequency of 5, gamma of 0.99 and a $\epsilon$-greedy of 0.1(1e-6 decrement every step)
 #### CartPole-v0
 The following is loss with respect to episodes
-
+![](images/CartPole-v0-reward.svg)
 And a demo of the trained agents
-
 ![](images/cartpole_result.gif)
+#### MountainCar-v0
+The following is loss with respect to episodes
+![](images/MountainCar-v0-reward.svg)
+And a demo of the trained agents
+![](images/mountainCar_result.gif)
+MountainCar agent has not been fully trained due to a limited episodes, you can try to increase the total episodes and have a fully converged model. 
